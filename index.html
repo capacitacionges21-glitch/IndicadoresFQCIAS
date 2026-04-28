@@ -5,18 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Corporativo - Gestión Multi-Cadena</title>
     
+    <!-- Librerías Externas -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Agregadas librerías para exportar a PDF y PPTX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 
     <style>
+        /* Variables CSS Dinámicas para los Temas de Marca */
         :root {
             --bg-main: #f4f7f9;
+            
+            /* Colores por defecto (Azules Corporativos) */
             --color-m1: #2F5597;
             --color-m2: #8FAADC;
             --color-m3: #B4C6E7;
@@ -31,31 +37,54 @@
             color: #1e293b;
         }
 
-        input, select, button, textarea, option { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+        input, select, button, textarea, option {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
 
-        .kpi-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .kpi-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
 
-        .chart-container { position: relative; min-height: 450px; width: 100%; }
+        .chart-container {
+            position: relative;
+            min-height: 450px;
+            width: 100%;
+        }
 
-        .loader { border-top-color: #475569; animation: spinner 1s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader {
+            border-top-color: #475569;
+            animation: spinner 1s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-        .table-container { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+        .table-container {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
         .table-container::-webkit-scrollbar { height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
+    <!-- Pantalla de Carga -->
     <div id="loading-overlay" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-100 h-16 w-16 mb-6"></div>
         <h2 class="text-xl font-bold text-slate-800">Cargando Indicadores Consolidados...</h2>
         <p class="text-slate-500 mt-2">Sincronizando con bases de datos externas</p>
     </div>
 
+    <!-- Contenedor Principal (Objetivo del PDF/PPTX) -->
     <div id="dashboard-content" class="max-w-[1600px] mx-auto space-y-8 pb-8">
         
+        <!-- Encabezado Principal -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <div class="flex items-center gap-5">
                 <div id="header-icon-container" class="bg-slate-700 p-3 rounded-2xl shadow-lg shadow-slate-200 transition-colors duration-500">
@@ -67,11 +96,17 @@
                 </div>
             </div>
             
+            <!-- Botones de Descarga e Info -->
             <div class="flex items-center gap-4">
-                <button id="btn-download-pdf" onclick="downloadPDF()" data-html2canvas-ignore="true" class="bg-[var(--color-m1)] hover:opacity-90 text-white px-5 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-slate-200">
-                    <i data-lucide="download" class="w-4 h-4"></i> Exportar PDF
-                </button>
-                <div class="flex items-center gap-4 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-100 hidden sm:flex">
+                <div class="flex items-center gap-2" data-html2canvas-ignore="true">
+                    <button id="btn-download-pdf" onclick="downloadPDF()" class="bg-[var(--color-m1)] hover:opacity-90 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-slate-200">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> PDF
+                    </button>
+                    <button id="btn-download-pptx" onclick="downloadPPTX()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-slate-200">
+                        <i data-lucide="presentation" class="w-4 h-4"></i> PPTX
+                    </button>
+                </div>
+                <div class="flex items-center gap-4 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-100 hidden lg:flex">
                     <div class="text-right">
                         <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Estado de Datos</p>
                         <p id="current-date" class="text-sm font-bold text-slate-700"></p>
@@ -83,6 +118,7 @@
             </div>
         </div>
 
+        <!-- Sección de Filtros -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-2">
@@ -139,6 +175,7 @@
             </div>
         </div>
 
+        <!-- Tarjetas KPI Principales -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between overflow-hidden relative">
                 <div class="flex justify-between items-start z-10">
@@ -241,9 +278,11 @@
             </div>
         </div>
 
+        <!-- Seccion de Gráficas -->
         <div class="grid grid-cols-1 gap-8">
             
             <div id="compare-charts-wrapper" class="grid grid-cols-1 gap-8">
+                <!-- Comparativo REV 2025 vs 2026 (Moteburger/Centura) -->
                 <div id="container-rev-compare" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hidden">
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-3">
@@ -267,6 +306,7 @@
                     </div>
                 </div>
 
+                <!-- Comparativo OER 2025 vs 2026 (Church's) -->
                 <div id="container-oer-compare" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hidden">
                     <div class="flex items-center gap-3 mb-8">
                         <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
@@ -281,6 +321,7 @@
                 </div>
             </div>
 
+            <!-- Evolución Mensual General -->
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
@@ -316,6 +357,7 @@
         <div id="zero-protocol-wrapper"></div>
         <div id="sucesion-wrapper"></div>
 
+        <!-- Ranking Superior e Inferior -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <div class="flex items-center justify-between mb-6">
@@ -338,6 +380,7 @@
             </div>
         </div>
 
+        <!-- Tabla de Detalle -->
         <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
             <div class="p-8 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -1225,11 +1268,56 @@
             setTimeout(() => overlay.style.display = 'none', 500);
         }
 
+        async function downloadPPTX() {
+            const btn = document.getElementById('btn-download-pptx');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando PPTX...';
+            lucide.createIcons();
+
+            const element = document.getElementById('dashboard-content');
+            
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2, 
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#f4f7f9'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                let pres = new PptxGenJS();
+                
+                const widthInInches = 10;
+                const heightInInches = (canvas.height / canvas.width) * widthInInches;
+                
+                pres.defineLayout({ name:'DASHBOARD_LAYOUT', width: widthInInches, height: heightInInches });
+                pres.layout = 'DASHBOARD_LAYOUT';
+                
+                let slide = pres.addSlide();
+                slide.background = { color: "F4F7F9" };
+                slide.addImage({ data: imgData, x: 0, y: 0, w: widthInInches, h: heightInInches });
+                
+                const cadena = selections.cadena !== 'Todos' ? selections.cadena : 'General';
+                const sucursal = selections.sucursal !== 'Todos' ? selections.sucursal : '';
+                let filename = `Dashboard_${cadena}`;
+                if(sucursal) filename += `_${sucursal}`;
+                
+                await pres.writeFile({ fileName: filename.replace(/\s+/g, '_') + '.pptx' });
+            } catch (error) {
+                console.error("Error al generar PPTX:", error);
+                alert("Ocurrió un error al exportar a PowerPoint.");
+            } finally {
+                btn.innerHTML = originalContent;
+                lucide.createIcons();
+            }
+        }
+
         async function downloadPDF() {
             const btn = document.getElementById('btn-download-pdf');
             const originalContent = btn.innerHTML;
             
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando PDF...';
             lucide.createIcons();
 
             const element = document.getElementById('dashboard-content');
