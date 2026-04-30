@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Agregadas librerías para exportar a PDF y PPTX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
@@ -81,7 +80,6 @@
         <p class="text-slate-500 mt-2">Sincronizando con bases de datos externas</p>
     </div>
 
-    <!-- Contenedor Principal (Objetivo del PDF/PPTX) -->
     <div id="dashboard-content" class="max-w-[1600px] mx-auto space-y-8 pb-8">
         
         <!-- Encabezado Principal -->
@@ -96,7 +94,6 @@
                 </div>
             </div>
             
-            <!-- Botones de Descarga e Info -->
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2" data-html2canvas-ignore="true">
                     <button id="btn-download-pdf" onclick="downloadPDF()" class="bg-[var(--color-m1)] hover:opacity-90 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-slate-200">
@@ -130,7 +127,7 @@
                 </button>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Trimestre</label>
                     <select id="filter-trimestre" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-3 focus:ring-2 focus:ring-[var(--color-m1)] outline-none transition-all cursor-pointer"></select>
@@ -165,35 +162,35 @@
                     <select id="filter-distrito" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-3 focus:ring-2 focus:ring-[var(--color-m1)] outline-none transition-all cursor-pointer"></select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Gerente</label>
-                    <select id="filter-gerente" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-3 focus:ring-2 focus:ring-[var(--color-m1)] outline-none transition-all cursor-pointer"></select>
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Sucursal</label>
-                    <select id="filter-sucursal" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-3 focus:ring-2 focus:ring-[var(--color-m1)] outline-none transition-all cursor-pointer"></select>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Gerente / Sucursal</label>
+                    <select id="filter-gerente_sucursal" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-3 focus:ring-2 focus:ring-[var(--color-m1)] outline-none transition-all cursor-pointer"></select>
                 </div>
             </div>
         </div>
 
-        <!-- Tarjetas KPI Principales -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Tarjetas KPI Principales (5 Columnas para 10 tarjetas simétricas) -->
+        <div id="export-kpis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between overflow-hidden relative">
                 <div class="flex justify-between items-start z-10">
                     <div>
                         <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Sucursales</p>
-                        <h3 id="kpi-sucursales" class="text-4xl font-black text-slate-800 mt-2">0</h3>
+                        <h3 id="kpi-sucursales" class="text-4xl font-black text-slate-800 mt-1">0</h3>
+                        <p class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">Unidades operativas activas evaluadas<br>&nbsp;</p>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-2xl">
                         <i data-lucide="store" class="w-6 h-6 text-slate-400"></i>
                     </div>
                 </div>
-                <p class="text-[10px] text-slate-400 mt-4 font-bold">Unidades operativas activas</p>
             </div>
 
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
                     <p class="text-xs font-black uppercase tracking-widest transition-colors duration-500 text-[var(--color-m1)]">ServSafe</p>
-                    <h3 id="kpi-srv" class="text-4xl font-black text-slate-800 mt-2">0%</h3>
+                    <h3 id="kpi-srv" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div id="detail-srv" class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        0 Gtes. con ServSafe / 0 Plantilla<br>
+                        0 Sub. con ServSafe / 0 Plantilla
+                    </div>
                 </div>
                 <div class="mt-4">
                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -205,7 +202,10 @@
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
                     <p id="label-m2" class="text-xs font-black uppercase tracking-widest transition-colors duration-500 text-[var(--color-m2)]">BKU / PTE</p>
-                    <h3 id="kpi-m2" class="text-4xl font-black text-slate-800 mt-2">0%</h3>
+                    <h3 id="kpi-m2" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div id="detail-bku" class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        0 Colab. con curso / 0 Plantilla<br>&nbsp;
+                    </div>
                 </div>
                 <div class="mt-4">
                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -217,7 +217,10 @@
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
                     <p id="label-m3" class="text-xs font-black uppercase tracking-widest transition-colors duration-500 text-[var(--color-m3)]">REV / OER</p>
-                    <h3 id="kpi-m3" class="text-4xl font-black text-slate-800 mt-2">0%</h3>
+                    <h3 id="kpi-m3" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div id="detail-rev" class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        Sin auditorías registradas<br>&nbsp;
+                    </div>
                 </div>
                 <div class="mt-4">
                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -228,8 +231,26 @@
 
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
+                    <p class="text-xs font-black uppercase tracking-widest transition-colors duration-500 text-[var(--color-m1)]">REC (Critical Visit)</p>
+                    <h3 id="kpi-rec" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div id="detail-rec" class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        Visitas Críticas generadas: 0<br>&nbsp;
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div id="bar-rec" class="h-full transition-all duration-1000 bg-[var(--color-m1)]" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
                     <p class="text-xs font-black uppercase tracking-widest text-[#1F3864]">Cert. Gerencial</p>
-                    <h3 id="kpi-cert" class="text-4xl font-black text-slate-800 mt-2">0%</h3>
+                    <h3 id="kpi-cert" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        Porcentaje general de certificación<br>&nbsp;
+                    </div>
                 </div>
                 <div class="mt-4">
                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -241,7 +262,10 @@
             <div class="kpi-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
                     <p class="text-xs font-black uppercase tracking-widest text-[#4472C4]">Ocup. Plantillas</p>
-                    <h3 id="kpi-ocup" class="text-4xl font-black text-slate-800 mt-2">0%</h3>
+                    <h3 id="kpi-ocup" class="text-4xl font-black text-slate-800 mt-1">0%</h3>
+                    <div class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">
+                        Nivel de cobertura de plantilla ideal<br>&nbsp;
+                    </div>
                 </div>
                 <div class="mt-4">
                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -254,41 +278,51 @@
                 <div class="flex justify-between items-start z-10">
                     <div>
                         <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Sucesión</p>
-                        <h3 id="kpi-sucesion" class="text-4xl font-black text-slate-800 mt-2">0</h3>
+                        <h3 id="kpi-sucesion" class="text-4xl font-black text-slate-800 mt-1">0</h3>
+                        <p class="text-[9.5px] text-slate-400 font-bold mt-2 leading-tight">Colaboradores listos para promoción<br>&nbsp;</p>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-2xl">
                         <i data-lucide="users" class="w-6 h-6 text-slate-400"></i>
                     </div>
                 </div>
-                <p class="text-[10px] text-slate-400 mt-4 font-bold">Colaboradores en desarrollo</p>
             </div>
-
-            <!-- Tarjeta KPI de Zero Protocol -->
+            
             <div class="kpi-card bg-red-50 p-6 rounded-3xl shadow-sm border border-red-200 flex flex-col justify-between overflow-hidden relative">
                 <div class="flex justify-between items-start z-10">
                     <div>
                         <p class="text-xs font-black text-red-500 uppercase tracking-widest">Zero Protocol</p>
-                        <h3 id="kpi-zp" class="text-4xl font-black text-red-700 mt-2">0</h3>
+                        <h3 id="kpi-zp" class="text-4xl font-black text-red-700 mt-1">0</h3>
+                        <p id="detail-zp" class="text-[9.5px] text-red-400 font-bold mt-2 leading-tight">0% de sucursales afectadas<br>&nbsp;</p>
                     </div>
                     <div class="bg-red-100 p-3 rounded-2xl">
                         <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
                     </div>
                 </div>
-                <p class="text-[10px] text-red-500 mt-4 font-bold">Incidencias detectadas</p>
+            </div>
+
+            <div class="kpi-card bg-white/50 p-6 rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors duration-500 bg-[var(--color-m1-light)] text-[var(--color-m1)]">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">OBJETIVO ESTRATÉGICO</p>
+                <h3 class="text-2xl font-black mt-1 transition-colors duration-500 text-[var(--color-m1)]">META 100%</h3>
             </div>
         </div>
 
         <!-- Seccion de Gráficas -->
-        <div class="grid grid-cols-1 gap-8">
+        <div class="grid grid-cols-1 gap-8 mt-8">
             
             <div id="compare-charts-wrapper" class="grid grid-cols-1 gap-8">
-                <!-- Comparativo REV 2025 vs 2026 (Moteburger/Centura) -->
+                <!-- Comparativo REV 2025 vs 2026 -->
                 <div id="container-rev-compare" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hidden">
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-3">
                             <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
                             <div>
-                                <h3 id="title-rev-compare" class="text-xl font-bold text-slate-800 tracking-tight">Comparativo Auditorías REV</h3>
+                                <div class="flex items-center gap-3">
+                                    <h3 id="title-rev-compare" class="text-xl font-bold text-slate-800 tracking-tight">Evolución Trimestral REV</h3>
+                                    <span class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta 90%</span>
+                                </div>
                                 <p class="text-xs text-slate-500 font-medium mt-1">Unidades Moteburger y Centura</p>
                             </div>
                         </div>
@@ -298,7 +332,6 @@
                             <option value="extra">Extra REV</option>
                             <option value="re2">2nd Re-Audit</option>
                             <option value="ccv">CCV</option>
-                            <option value="crit">Critical Visit</option>
                         </select>
                     </div>
                     <div class="chart-container">
@@ -306,12 +339,32 @@
                     </div>
                 </div>
 
-                <!-- Comparativo OER 2025 vs 2026 (Church's) -->
+                <!-- Comparativo REC -->
+                <div id="container-rec-compare" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hidden">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <h3 id="title-rec-compare" class="text-xl font-bold text-slate-800 tracking-tight">Evolución Trimestral REC</h3>
+                                <span class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta 90%</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Unidades Moteburger y Centura</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-rec-compare"></canvas>
+                    </div>
+                </div>
+
+                <!-- Comparativo OER / RAV -->
                 <div id="container-oer-compare" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hidden">
                     <div class="flex items-center gap-3 mb-8">
                         <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
                         <div>
-                            <h3 id="title-oer-compare" class="text-xl font-bold text-slate-800 tracking-tight">Comparativo OER</h3>
+                            <div class="flex items-center gap-3">
+                                <h3 id="title-oer-compare" class="text-xl font-bold text-slate-800 tracking-tight">Evolución Trimestral OER / RAV</h3>
+                                <span class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta 90%</span>
+                            </div>
                             <p class="text-xs text-slate-500 font-medium mt-1">Unidades Church's</p>
                         </div>
                     </div>
@@ -321,31 +374,56 @@
                 </div>
             </div>
 
-            <!-- Evolución Mensual General -->
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+            <!-- Gráfico Zero Protocol (NUEVO) -->
+            <div id="export-chart-zp" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <div class="flex items-center gap-3 mb-8">
-                    <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
-                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">Evolución de Cumplimiento Mensual</h3>
+                    <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-red-500"></div>
+                    <div class="flex items-center gap-3">
+                        <h3 id="title-chart-zp" class="text-xl font-bold text-slate-800 tracking-tight">Incidencia Zero Protocol</h3>
+                        <span class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Alerta Crítica</span>
+                    </div>
                 </div>
                 <div class="chart-container">
-                    <canvas id="chart-line"></canvas>
+                    <canvas id="chart-zp"></canvas>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+            <!-- Gráfico Gerentes -->
+            <div id="export-chart-gerente" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m1)]"></div>
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-xl font-bold text-slate-800 tracking-tight">Resultados por Gerente de Negocio</h3>
+                        <span id="meta-badge-gerente" class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta Promedio 90%</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart-gerente"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico Cadenas / Unidades -->
+            <div id="export-chart-cadena" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m2)]"></div>
-                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">Comparativa por Unidades de Negocio</h3>
+                    <div class="flex items-center gap-3">
+                        <h3 id="title-chart-cadena" class="text-xl font-bold text-slate-800 tracking-tight">Comparativa por Franquicia</h3>
+                        <span id="meta-badge-cadena" class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta Promedio 90%</span>
+                    </div>
                 </div>
                 <div class="chart-container">
                     <canvas id="chart-cadena"></canvas>
                 </div>
             </div>
             
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+            <!-- Gráfico Distrito -->
+            <div id="export-chart-distrito" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-2 h-8 rounded-full transition-colors duration-500 bg-[var(--color-m3)]"></div>
-                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">Desempeño Crítico por Gerente de Distrito</h3>
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-xl font-bold text-slate-800 tracking-tight">Desempeño Crítico por Gerente de Distrito</h3>
+                        <span id="meta-badge-distrito" class="bg-red-100 text-red-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest">Meta Promedio 90%</span>
+                    </div>
                 </div>
                 <div class="chart-container">
                     <canvas id="chart-distrito"></canvas>
@@ -353,7 +431,7 @@
             </div>
         </div>
 
-        <!-- Cajas de Alertas y Desempeño RH (Zero Protocol y Sucesión) -->
+        <!-- Alerta Zero Protocol -->
         <div id="zero-protocol-wrapper"></div>
         <div id="sucesion-wrapper"></div>
 
@@ -381,7 +459,7 @@
         </div>
 
         <!-- Tabla de Detalle -->
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
+        <div id="export-table" class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
             <div class="p-8 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
@@ -447,7 +525,7 @@
         let currentRevType = 'std'; 
         
         const selections = {
-            trimestre: 'Todos', mes: 'Todos', cadena: 'Todos', indicador: 'Todos', region: 'Todos', distrito: 'Todos', gerente: 'Todos', sucursal: 'Todos'
+            trimestre: 'Todos', mes: 'Todos', cadena: 'Todos', indicador: 'Todos', region: 'Todos', distrito: 'Todos', gerente_sucursal: 'Todos'
         };
 
         window.onload = async () => {
@@ -455,23 +533,6 @@
             await fetchAllData();
             lucide.createIcons();
         };
-
-        function safeAvg(arr, valFn) {
-            const validItems = arr.filter(d => valFn(d) !== null && valFn(d) !== undefined);
-            if (validItems.length === 0) return null;
-            const sum = validItems.reduce((acc, d) => acc + valFn(d), 0);
-            const avg = sum / validItems.length;
-            if (avg < 0 && avg > -0.5) return -0.00001; 
-            return Math.round(avg);
-        }
-
-        function parsePct(val) {
-            if (val === undefined || val === null || val.toString().trim() === '') return null;
-            const strVal = val.toString().trim().toLowerCase();
-            if (strVal.includes('zero protocol')) return -0.00001;
-            const n = parseFloat(strVal.replace('%', '').replace(',', '.'));
-            return isNaN(n) ? null : n;
-        }
 
         async function fetchAllData() {
             try {
@@ -492,20 +553,21 @@
                 Papa.parse(url, {
                     download: true, header: false, skipEmptyLines: true,
                     complete: (results) => {
-                        const cleanRows = results.data.slice(1).filter(row => row.length >= 12).map(row => {
+                        const cleanRows = results.data.slice(1).filter(row => row.length >= 12 && row[5] && row[5].trim() !== '').map(row => {
                             const isChurchs = sourceName.toLowerCase().includes('church');
                             
-                            const srv = parsePct(row[9]); 
-                            const m2 = parsePct(row[10]); 
-                            
-                            let m3 = null;
-                            let rev25r1 = { std: null, re: null, extra: null, re2: null, ccv: null, crit: null };
-                            let rev26r1 = { std: null, re: null, extra: null, re2: null, ccv: null, crit: null };
-                            let rev25r2 = { std: null, re: null, extra: null, re2: null, ccv: null, crit: null };
-                            let rev26r2 = { std: null, re: null, extra: null, re2: null, ccv: null, crit: null };
-                            let rrhh = { certGerencial: null, ocPlantilla: null, colSucesion: 0 };
-
                             const isZeroProtocol = row.some(cell => typeof cell === 'string' && cell.toLowerCase().includes('zero protocol'));
+
+                            let srv = parsePct(row[11]); 
+                            let m2 = parsePct(row[13]); 
+                            let m3 = 0;
+                            
+                            let rev25r1 = { std: 0, re: 0, extra: 0, re2: 0, ccv: 0 };
+                            let rev26r1 = { std: 0, re: 0, extra: 0, re2: 0, ccv: 0 };
+                            let rev25r2 = { std: 0, re: 0, extra: 0, re2: 0, ccv: 0 };
+                            let rev26r2 = { std: 0, re: 0, extra: 0, re2: 0, ccv: 0 };
+                            let rec25r1 = 0, rec26r1 = 0, rec25r2 = 0, rec26r2 = 0;
+                            let rrhh = { certGerencial: 0, ocPlantilla: 0, colSucesion: 0 };
 
                             let zpIncidences = [];
                             const checkZP = (val, label) => {
@@ -515,62 +577,64 @@
                             };
 
                             if (isChurchs) {
-                                checkZP(row[11], 'OER 2025');
-                                checkZP(row[12], 'OER 2026');
+                                m3 = parsePct(row[15]) || parsePct(row[14]);
 
-                                m3 = parsePct(row[12]); 
-                                rev25r1.std = parsePct(row[11]); 
-                                rev26r1.std = parsePct(row[12]); 
-                                rrhh.certGerencial = parsePct(row[13]); 
-                                rrhh.ocPlantilla = parsePct(row[14]); 
-                                rrhh.colSucesion = row[15] ? (parseInt(row[15]) || 0) : 0; 
+                                checkZP(row[14], 'OER 2025');
+                                checkZP(row[15], 'RAV 2026');
+
+                                rev25r1.std = parsePct(row[14]); 
+                                rev26r1.std = parsePct(row[15]); 
+                                
+                                rrhh.certGerencial = parsePct(row[16]); 
+                                rrhh.ocPlantilla = parsePct(row[18]); 
+                                rrhh.colSucesion = parseInt(row[19]) || 0; 
                             } else {
-                                checkZP(row[11], 'Std 25 R1');
-                                checkZP(row[12], 'Re-Audit 25 R1');
-                                checkZP(row[13], 'Extra 25 R1');
-                                checkZP(row[14], '2nd Re 25 R1');
-                                checkZP(row[15], 'CCV 25 R1');
-                                checkZP(row[16], 'Crit. 25 R1');
+                                m3 = parsePct(row[20]) || parsePct(row[14]) || parsePct(row[26]) || parsePct(row[32]) || 0; 
                                 
-                                checkZP(row[17], 'Std 26 R1');
-                                checkZP(row[18], 'Re-Audit 26 R1');
-                                checkZP(row[19], 'Extra 26 R1');
-                                checkZP(row[20], '2nd Re 26 R1');
-                                checkZP(row[21], 'CCV 26 R1');
-                                checkZP(row[22], 'Crit. 26 R1');
+                                checkZP(row[14], 'Std 25 R1');
+                                checkZP(row[15], 'Re-Audit 25 R1');
+                                checkZP(row[16], 'Extra 25 R1');
+                                checkZP(row[17], '2nd Re 25 R1');
+                                checkZP(row[18], 'CCV 25 R1');
+                                checkZP(row[19], 'REC 25 R1');
                                 
-                                checkZP(row[23], 'Std 25 R2');
-                                checkZP(row[24], 'Re-Audit 25 R2');
-                                checkZP(row[25], 'Extra 25 R2');
-                                checkZP(row[26], '2nd Re 25 R2');
-                                checkZP(row[27], 'CCV 25 R2');
-                                checkZP(row[28], 'Crit. 25 R2');
+                                checkZP(row[20], 'Std 26 R1');
+                                checkZP(row[21], 'Re-Audit 26 R1');
+                                checkZP(row[22], 'Extra 26 R1');
+                                checkZP(row[23], '2nd Re 26 R1');
+                                checkZP(row[24], 'CCV 26 R1');
+                                checkZP(row[25], 'REC 26 R1');
                                 
-                                checkZP(row[29], 'Std 26 R2');
-                                checkZP(row[30], 'Re-Audit 26 R2');
-                                checkZP(row[31], 'Extra 26 R2');
-                                checkZP(row[32], '2nd Re 26 R2');
-                                checkZP(row[33], 'CCV 26 R2');
-                                checkZP(row[34], 'Crit. 26 R2');
+                                checkZP(row[26], 'Std 25 R2');
+                                checkZP(row[27], 'Re-Audit 25 R2');
+                                checkZP(row[28], 'Extra 25 R2');
+                                checkZP(row[29], '2nd Re 25 R2');
+                                checkZP(row[30], 'CCV 25 R2');
+                                checkZP(row[31], 'REC 25 R2');
+                                
+                                checkZP(row[32], 'Std 26 R2');
+                                checkZP(row[33], 'Re-Audit 26 R2');
+                                checkZP(row[34], 'Extra 26 R2');
+                                checkZP(row[35], '2nd Re 26 R2');
+                                checkZP(row[36], 'CCV 26 R2');
+                                checkZP(row[37], 'REC 26 R2');
 
-                                m3 = parsePct(row[17]);
+                                rev25r1 = { std: parsePct(row[14]), re: parsePct(row[15]), extra: parsePct(row[16]), re2: parsePct(row[17]), ccv: parsePct(row[18]) };
+                                rec25r1 = parsePct(row[19]);
+                                rev26r1 = { std: parsePct(row[20]), re: parsePct(row[21]), extra: parsePct(row[22]), re2: parsePct(row[23]), ccv: parsePct(row[24]) };
+                                rec26r1 = parsePct(row[25]);
+                                rev25r2 = { std: parsePct(row[26]), re: parsePct(row[27]), extra: parsePct(row[28]), re2: parsePct(row[29]), ccv: parsePct(row[30]) };
+                                rec25r2 = parsePct(row[31]);
+                                rev26r2 = { std: parsePct(row[32]), re: parsePct(row[33]), extra: parsePct(row[34]), re2: parsePct(row[35]), ccv: parsePct(row[36]) };
+                                rec26r2 = parsePct(row[37]);
                                 
-                                rev25r1 = { std: parsePct(row[11]), re: parsePct(row[12]), extra: parsePct(row[13]), re2: parsePct(row[14]), ccv: parsePct(row[15]), crit: parsePct(row[16]) };
-                                rev26r1 = { std: parsePct(row[17]), re: parsePct(row[18]), extra: parsePct(row[19]), re2: parsePct(row[20]), ccv: parsePct(row[21]), crit: parsePct(row[22]) };
-                                rev25r2 = { std: parsePct(row[23]), re: parsePct(row[24]), extra: parsePct(row[25]), re2: parsePct(row[26]), ccv: parsePct(row[27]), crit: parsePct(row[28]) };
-                                rev26r2 = { std: parsePct(row[29]), re: parsePct(row[30]), extra: parsePct(row[31]), re2: parsePct(row[32]), ccv: parsePct(row[33]), crit: parsePct(row[34]) };
-                                
-                                rrhh.certGerencial = parsePct(row[35]);
-                                rrhh.ocPlantilla = parsePct(row[36]);
-                                rrhh.colSucesion = row[37] ? (parseInt(row[37]) || 0) : 0;
+                                rrhh.certGerencial = parsePct(row[38]);
+                                rrhh.ocPlantilla = parsePct(row[40]);
+                                rrhh.colSucesion = parseInt(row[41]) || 0;
                             }
 
-                            const activeMetrics = [{v:srv}, {v:m2}, {v:m3}].filter(m => m.v !== null);
-                            const promedio = activeMetrics.length > 0 ? safeAvg(activeMetrics, x => x.v) : null;
-
-                            if (srv === null && m2 === null && m3 === null && rrhh.certGerencial === null && !isZeroProtocol) return null;
-
-                            const mesStr = row[0]?.trim(); const tri = getTrimestre(mesStr);
+                            const mesStr = row[0]?.trim(); 
+                            const tri = getTrimestre(mesStr);
 
                             if (isZeroProtocol && zpIncidences.length === 0) {
                                 zpIncidences.push('General');
@@ -580,15 +644,27 @@
                                 mes: mesStr, trimestre: tri, region: row[1]?.trim() || 'S/R',
                                 distrito: row[2]?.trim() || 'S/D', gerente: row[3]?.trim() || 'S/G',
                                 cadena: row[4]?.trim() || sourceName, sucursal: row[5]?.trim() || 'S/S',
+                                gerente_sucursal: `${row[5]?.trim() || 'S/S'} - ${row[3]?.trim() || 'S/G'}`,
                                 gerP: parseInt(row[6]) || 0, subP: parseInt(row[7]) || 0, colP: parseInt(row[8]) || 0,
-                                srv: srv, m2: m2, m3: m3, promedio: promedio,
-                                rev25r1: rev25r1, rev26r1: rev26r1, rev25r2: rev25r2, rev26r2: rev26r2, rrhh: rrhh, hasZeroProtocol: isZeroProtocol, zpIncidences: zpIncidences
+                                gerSrv: parseInt(row[9]) || 0, subSrv: parseInt(row[10]) || 0, bkuCol: parseInt(row[12]) || 0,
+                                srv: srv, m2: m2, m3: m3, promedio: Math.round((srv + m2 + m3) / 3),
+                                rev25r1: rev25r1, rev26r1: rev26r1, rev25r2: rev25r2, rev26r2: rev26r2,
+                                rec25r1: rec25r1, rec26r1: rec26r1, rec25r2: rec25r2, rec26r2: rec26r2,
+                                rrhh: rrhh, hasZeroProtocol: isZeroProtocol, zpIncidences: zpIncidences
                             };
-                        }).filter(Boolean);
+                        });
                         resolve(cleanRows);
                     }, error: reject
                 });
             });
+        }
+
+        function parsePct(val) {
+            if (!val) return 0;
+            const strVal = val.toString().trim().toLowerCase();
+            if (strVal.includes('zero protocol')) return -0.00001; 
+            const n = parseFloat(strVal.replace('%', '').replace(',', '.'));
+            return isNaN(n) ? 0 : n;
         }
 
         function getTrimestre(mes) {
@@ -605,7 +681,7 @@
         }
 
         function populateFilters() {
-            const levels = ['trimestre', 'mes', 'cadena', 'region', 'distrito', 'gerente', 'sucursal'];
+            const levels = ['trimestre', 'mes', 'cadena', 'region', 'distrito', 'gerente_sucursal'];
             let currentSubset = [...RawData];
 
             levels.forEach((level, idx) => {
@@ -616,7 +692,7 @@
                 else options.sort();
 
                 const prevValue = selections[level];
-                select.innerHTML = `<option value="Todos">Seleccionar ${level === 'gerente' ? 'Gerente Neg.' : level.charAt(0).toUpperCase() + level.slice(1)}</option>`;
+                select.innerHTML = `<option value="Todos">Seleccionar ${level === 'gerente_sucursal' ? 'Gerente / Sucursal' : level.charAt(0).toUpperCase() + level.slice(1)}</option>`;
                 
                 options.forEach(opt => {
                     const isSelected = opt === prevValue ? 'selected' : '';
@@ -646,7 +722,7 @@
 
         function applyFilters() {
             FilteredData = RawData.filter(d => Object.entries(selections).every(([key, val]) => {
-                if (key === 'indicador') return true; 
+                if (key === 'indicador') return true;
                 return val === 'Todos' || d[key] === val;
             }));
             populateFilters();
@@ -662,6 +738,7 @@
         function updateDashboard() {
             updateThemeAndLabels();
             updateKPIs();
+            updateMetaBadges(); 
             renderCharts();
             renderZeroProtocol();
             renderSucesion();
@@ -681,7 +758,7 @@
             
             if (isChurchs && cadenas.length > 0) {
                 activePalette = PALETTES['churchs'];
-                labelM2 = "PTE"; labelM3 = "OER";
+                labelM2 = "PTE"; labelM3 = "OER / RAV";
             } else if (isMoteburger && cadenas.length > 0) {
                 activePalette = PALETTES['moteburger'];
                 labelM2 = "BKU"; labelM3 = "REV";
@@ -689,7 +766,7 @@
                 activePalette = PALETTES['centura'];
                 labelM2 = "BKU"; labelM3 = "REV";
             } else {
-                activePalette = PALETTES['default']; 
+                activePalette = PALETTES['default'];
             }
 
             const root = document.documentElement;
@@ -700,7 +777,8 @@
             root.style.setProperty('--color-m2-light', hexToRgba(activePalette.m2, 0.15));
             root.style.setProperty('--color-m3-light', hexToRgba(activePalette.m3, 0.15));
 
-            document.getElementById('header-icon-container').style.backgroundColor = activePalette.m1;
+            const iconContainer = document.getElementById('header-icon-container');
+            iconContainer.style.backgroundColor = activePalette.m1;
 
             document.getElementById('label-m2').innerText = labelM2;
             document.getElementById('label-m3').innerText = labelM3;
@@ -712,6 +790,7 @@
             document.getElementById('dynamic-subtitle').style.color = activePalette.m1;
 
             const revContainer = document.getElementById('container-rev-compare');
+            const recContainer = document.getElementById('container-rec-compare');
             const oerContainer = document.getElementById('container-oer-compare');
             const compareWrapper = document.getElementById('compare-charts-wrapper');
             
@@ -719,50 +798,170 @@
             const hasMoteCentura = FilteredData.some(d => !d.cadena.toLowerCase().includes('church') && !d.cadena.toLowerCase().includes('pte'));
             const showCompareCharts = selections.indicador === 'Todos' || selections.indicador === 'm3';
 
-            if (hasChurchs && showCompareCharts) oerContainer.classList.remove('hidden');
-            else oerContainer.classList.add('hidden');
+            if (hasChurchs && showCompareCharts) {
+                oerContainer.classList.remove('hidden');
+            } else {
+                oerContainer.classList.add('hidden');
+            }
 
-            if (hasMoteCentura && showCompareCharts) revContainer.classList.remove('hidden');
-            else revContainer.classList.add('hidden');
+            if (hasMoteCentura && showCompareCharts) {
+                revContainer.classList.remove('hidden');
+                recContainer.classList.remove('hidden');
+            } else {
+                revContainer.classList.add('hidden');
+                recContainer.classList.add('hidden');
+            }
             
             compareWrapper.classList.remove('lg:grid-cols-2');
         }
 
+        function updateMetaBadges() {
+            const ind = selections.indicador;
+            let metaText = "Meta 90%";
+            let metaClass = "bg-red-100 text-red-700"; 
+            
+            if (ind === 'srv' || ind === 'cert') {
+                metaText = "Meta 100%";
+                metaClass = "bg-green-100 text-green-700"; 
+            } else if (ind === 'Todos') {
+                metaText = "Meta Promedio 90%";
+                metaClass = "bg-red-100 text-red-700";
+            }
+
+            const badges = ['meta-badge-gerente', 'meta-badge-cadena', 'meta-badge-distrito'];
+            badges.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = metaText;
+                    el.className = `text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest ${metaClass}`;
+                }
+            });
+        }
+
         function updateKPIs() {
             const count = new Set(FilteredData.map(d => d.sucursal)).size;
-            document.getElementById('kpi-sucursales').innerText = count;
             
-            const zpCount = new Set(FilteredData.filter(d => d.hasZeroProtocol).map(d => d.sucursal)).size;
-            document.getElementById('kpi-zp').innerText = zpCount;
-
-            const srv = safeAvg(FilteredData, d => d.srv);
-            const m2 = safeAvg(FilteredData, d => d.m2);
-            const m3 = safeAvg(FilteredData, d => d.m3);
-            const cert = safeAvg(FilteredData, d => d.rrhh.certGerencial);
-            const ocup = safeAvg(FilteredData, d => d.rrhh.ocPlantilla);
-
-            const displayKPI = (val) => val !== null ? (val < 0 ? '0%' : val + '%') : '-';
-            const widthKPI = (val) => val !== null ? (val < 0 ? '0%' : val + '%') : '0%';
-
-            document.getElementById('kpi-srv').innerText = displayKPI(srv);
-            document.getElementById('bar-srv').style.width = widthKPI(srv);
-            document.getElementById('kpi-m2').innerText = displayKPI(m2);
-            document.getElementById('bar-m2').style.width = widthKPI(m2);
-            document.getElementById('kpi-m3').innerText = displayKPI(m3);
-            document.getElementById('bar-m3').style.width = widthKPI(m3);
-
-            document.getElementById('kpi-cert').innerText = displayKPI(cert);
-            document.getElementById('bar-cert').style.width = widthKPI(cert);
-            document.getElementById('kpi-ocup').innerText = displayKPI(ocup);
-            document.getElementById('bar-ocup').style.width = widthKPI(ocup);
+            const avg = (key) => Math.round(FilteredData.reduce((acc, d) => acc + d[key], 0) / FilteredData.length || 0);
+            const avgNested = (parent, key) => Math.round(FilteredData.reduce((acc, d) => acc + (d[parent] && d[parent][key] ? d[parent][key] : 0), 0) / FilteredData.length || 0);
+            
+            let sumGerP = 0, sumSubP = 0, sumColP = 0;
+            let sumGerSrv = 0, sumSubSrv = 0, sumBkuCol = 0;
 
             const sucursales = [...new Set(FilteredData.map(d => d.sucursal))];
             let totalSuc = 0;
+            
             sucursales.forEach(suc => {
                 const sub = FilteredData.filter(d => d.sucursal === suc);
+                const latest = sub[sub.length - 1]; 
+                
+                sumGerP += latest.gerP || 0;
+                sumSubP += latest.subP || 0;
+                sumColP += latest.colP || 0;
+                sumGerSrv += latest.gerSrv || 0;
+                sumSubSrv += latest.subSrv || 0;
+                sumBkuCol += latest.bkuCol || 0;
+
                 totalSuc += Math.round(sub.reduce((acc, d) => acc + d.rrhh.colSucesion, 0) / sub.length || 0);
             });
+
+            const getUniqueAudits = (metricExtractor) => {
+                const branchesWithAudit = new Set();
+                FilteredData.forEach(d => {
+                    if (metricExtractor(d) > 0) branchesWithAudit.add(d.sucursal);
+                });
+                return branchesWithAudit.size;
+            };
+
+            const c_std = getUniqueAudits(d => !d.cadena.toLowerCase().includes('church') ? d.rev25r1?.std : 0) + 
+                          getUniqueAudits(d => !d.cadena.toLowerCase().includes('church') ? d.rev25r2?.std : 0) + 
+                          getUniqueAudits(d => !d.cadena.toLowerCase().includes('church') ? d.rev26r1?.std : 0) + 
+                          getUniqueAudits(d => !d.cadena.toLowerCase().includes('church') ? d.rev26r2?.std : 0);
+                          
+            const c_re = getUniqueAudits(d => d.rev25r1?.re) + getUniqueAudits(d => d.rev25r2?.re) + getUniqueAudits(d => d.rev26r1?.re) + getUniqueAudits(d => d.rev26r2?.re);
+            const c_extra = getUniqueAudits(d => d.rev25r1?.extra) + getUniqueAudits(d => d.rev25r2?.extra) + getUniqueAudits(d => d.rev26r1?.extra) + getUniqueAudits(d => d.rev26r2?.extra);
+            const c_re2 = getUniqueAudits(d => d.rev25r1?.re2) + getUniqueAudits(d => d.rev25r2?.re2) + getUniqueAudits(d => d.rev26r1?.re2) + getUniqueAudits(d => d.rev26r2?.re2);
+            const c_ccv = getUniqueAudits(d => d.rev25r1?.ccv) + getUniqueAudits(d => d.rev25r2?.ccv) + getUniqueAudits(d => d.rev26r1?.ccv) + getUniqueAudits(d => d.rev26r2?.ccv);
+            const c_rec = getUniqueAudits(d => d.rec25r1) + getUniqueAudits(d => d.rec25r2) + getUniqueAudits(d => d.rec26r1) + getUniqueAudits(d => d.rec26r2);
+
+            const isChurchs = FilteredData.some(d => d.cadena.toLowerCase().includes('church'));
+            const isMoteCentura = FilteredData.some(d => !d.cadena.toLowerCase().includes('church'));
+
+            let revText = [];
+            if (isMoteCentura) {
+                if(c_std) revText.push(`Std:${c_std}`);
+                if(c_re) revText.push(`Re:${c_re}`);
+                if(c_extra) revText.push(`Ext:${c_extra}`);
+                if(c_re2) revText.push(`Re2:${c_re2}`);
+                if(c_ccv) revText.push(`CCV:${c_ccv}`);
+            }
+            if (isChurchs) {
+                const c_oer = getUniqueAudits(d => d.cadena.toLowerCase().includes('church') ? d.rev25r1?.std : 0);
+                const c_rav = getUniqueAudits(d => d.cadena.toLowerCase().includes('church') ? d.rev26r1?.std : 0);
+                if(c_oer) revText.push(`OER:${c_oer}`);
+                if(c_rav) revText.push(`RAV:${c_rav}`);
+            }
+
+            document.getElementById('kpi-sucursales').innerText = count;
+            
+            const srv = avg('srv'), m2 = avg('m2'), m3 = avg('m3');
+            document.getElementById('kpi-srv').innerText = srv + '%';
+            document.getElementById('bar-srv').style.width = srv + '%';
+            document.getElementById('kpi-m2').innerText = m2 + '%';
+            document.getElementById('bar-m2').style.width = m2 + '%';
+            document.getElementById('kpi-m3').innerText = m3 + '%';
+            document.getElementById('bar-m3').style.width = m3 + '%';
+
+            const cert = avgNested('rrhh', 'certGerencial');
+            const ocup = avgNested('rrhh', 'ocPlantilla');
+
+            document.getElementById('kpi-cert').innerText = cert + '%';
+            document.getElementById('bar-cert').style.width = cert + '%';
+            document.getElementById('kpi-ocup').innerText = ocup + '%';
+            document.getElementById('bar-ocup').style.width = ocup + '%';
             document.getElementById('kpi-sucesion').innerText = totalSuc;
+            
+            const srvDetail = document.getElementById('detail-srv');
+            if (srvDetail) {
+                srvDetail.innerHTML = `${sumGerSrv} Gtes. con ServSafe / ${sumGerP} Plantilla<br>${sumSubSrv} Sub. con ServSafe / ${sumSubP} Plantilla`;
+            }
+
+            const bkuDetail = document.getElementById('detail-bku');
+            if (bkuDetail) {
+                bkuDetail.innerHTML = `${sumBkuCol} Colab. con curso / ${sumColP} Plantilla<br>&nbsp;`;
+            }
+
+            const revDetail = document.getElementById('detail-rev');
+            if (revDetail) {
+                revDetail.innerHTML = revText.length > 0 ? revText.join(' &bull; ') : 'Sin auditorías operativas registradas<br>&nbsp;';
+            }
+
+            const recDetail = document.getElementById('detail-rec');
+            if (recDetail) {
+                recDetail.innerHTML = `Visitas Críticas generadas: ${c_rec}<br>&nbsp;`;
+            }
+
+            const validRecs = [];
+            FilteredData.forEach(d => {
+                if (d.rec25r1 > 0) validRecs.push(d.rec25r1);
+                if (d.rec25r2 > 0) validRecs.push(d.rec25r2);
+                if (d.rec26r1 > 0) validRecs.push(d.rec26r1);
+                if (d.rec26r2 > 0) validRecs.push(d.rec26r2);
+            });
+            const recAvg = validRecs.length ? Math.round(validRecs.reduce((a,b) => a+b, 0) / validRecs.length) : 0;
+            const kpiRec = document.getElementById('kpi-rec');
+            if (kpiRec) kpiRec.innerText = recAvg + '%';
+            const barRec = document.getElementById('bar-rec');
+            if (barRec) barRec.style.width = recAvg + '%';
+
+            const zpCount = new Set(FilteredData.filter(d => d.hasZeroProtocol).map(d => d.sucursal)).size;
+            const kpiZp = document.getElementById('kpi-zp');
+            if(kpiZp) kpiZp.innerText = zpCount;
+
+            const detailZp = document.getElementById('detail-zp');
+            if(detailZp) {
+                const pctZp = count > 0 ? Math.round((zpCount / count) * 100) : 0;
+                detailZp.innerHTML = `${pctZp}% de las sucursales evaluadas<br>&nbsp;`;
+            }
         }
 
         const tooltipZpConfig = {
@@ -770,8 +969,8 @@
                 label: function(context) { 
                     let label = context.dataset.label || ''; 
                     if (label) label += ': '; 
-                    if (context.parsed.y < 0) label += '0% (Zero Protocol)';
-                    else label += context.parsed.y + '%'; 
+                    if (context.parsed.y <= 0) label += '0%';
+                    else label += Math.round(context.parsed.y) + '%'; 
                     return label; 
                 } 
             }
@@ -781,8 +980,8 @@
             anchor: 'end', align: 'top', 
             formatter: v => {
                 if (v === null || v === undefined) return '';
-                if (v < 0) return '0% ZP';
-                if (v > 0) return v + '%';
+                if (v <= 0) return '0%';
+                if (v > 0) return Math.round(v) + '%';
                 return ''; 
             }, 
             font: { weight: 'black', size: 10 }, color: '#475569' 
@@ -790,16 +989,88 @@
 
         function renderCharts() {
             Chart.register(ChartDataLabels);
+            
             renderRevCompareChart();
+            renderRecCompareChart();
             renderOerCompareChart();
-            renderLineChart();
-            renderBarChart('chart-cadena', 'cadena');
+            
+            renderZpChart();
+            renderGerenteChart(); 
+            
+            const isHierarchyFiltered = selections.cadena !== 'Todos' || selections.region !== 'Todos' || selections.distrito !== 'Todos' || selections.gerente_sucursal !== 'Todos';
+            const titleCadenaEl = document.getElementById('title-chart-cadena');
+            
+            if (isHierarchyFiltered) {
+                titleCadenaEl.innerText = "Comparativa por Unidades de Negocio";
+                renderBarChart('chart-cadena', 'sucursal');
+            } else {
+                titleCadenaEl.innerText = "Comparativa por Franquicia";
+                renderBarChart('chart-cadena', 'cadena');
+            }
+            
             renderBarChart('chart-distrito', 'distrito');
         }
 
         function updateRevChartType() {
             currentRevType = document.getElementById('select-rev-type').value;
             renderRevCompareChart();
+        }
+
+        function renderZpChart() {
+            if (ChartsObj['chart-zp']) ChartsObj['chart-zp'].destroy();
+            
+            if (FilteredData.length === 0) return;
+
+            const isHierarchyFiltered = selections.cadena !== 'Todos' || selections.region !== 'Todos' || selections.distrito !== 'Todos' || selections.gerente_sucursal !== 'Todos';
+            const field = isHierarchyFiltered ? 'sucursal' : 'cadena';
+            
+            document.getElementById('title-chart-zp').innerText = isHierarchyFiltered ? "Incidencia Zero Protocol por Sucursal" : "Incidencia Zero Protocol por Franquicia";
+
+            const groups = [...new Set(FilteredData.map(d => d[field]))];
+            
+            const stats = groups.map(g => {
+                const sub = FilteredData.filter(d => d[field] === g);
+                const branchesZP = new Set(sub.filter(d => d.hasZeroProtocol).map(d => d.sucursal)).size;
+                const branchesTotal = new Set(sub.map(d => d.sucursal)).size;
+                const pct = branchesTotal > 0 ? Math.round((branchesZP / branchesTotal) * 100) : 0;
+                return { label: g, pct: pct };
+            }).filter(item => item.pct > 0 || field === 'cadena').sort((a,b) => b.pct - a.pct).slice(0, 15);
+
+            const ctx = document.getElementById('chart-zp').getContext('2d');
+            ChartsObj['chart-zp'] = new Chart(ctx, {
+                type: 'bar',
+                data: { 
+                    labels: stats.map(d => d.label), 
+                    datasets: [{
+                        label: '% Incidencia ZP',
+                        data: stats.map(d => d.pct),
+                        backgroundColor: '#ef4444',
+                        borderRadius: 6
+                    }] 
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 35 } },
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { 
+                            anchor: 'end', align: 'top', 
+                            formatter: (v) => v > 0 ? v + '%' : '', 
+                            font: { weight: 'black', size: 10 }, color: '#475569' 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '% (Sucursales Afectadas)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, border: { dash: [4,4] } },
+                        x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 45, font: { size: 9 } } }
+                    }
+                }
+            });
         }
 
         function renderRevCompareChart() {
@@ -810,8 +1081,8 @@
 
             const sucursales = [...new Set(targetData.map(d => d.sucursal))];
             
-            const isSingleSucursal = selections.sucursal !== 'Todos' || sucursales.length === 1;
-            const isMidFilter = (selections.distrito !== 'Todos' || selections.gerente !== 'Todos') && !isSingleSucursal;
+            const isSingleSucursal = selections.gerente_sucursal !== 'Todos' || sucursales.length === 1;
+            const isMidFilter = selections.distrito !== 'Todos' && !isSingleSucursal;
 
             const selectEl = document.getElementById('select-rev-type');
             
@@ -822,23 +1093,107 @@
                 selectEl.classList.add('hidden');
                 document.getElementById('title-rev-compare').innerText = "Auditorías REV: " + sucursales[0];
                 
-                labels = ['Standard', 'Re-Audit', 'Extra REV', '2nd Re-Audit', 'CCV', 'Critical Visit'];
+                const avgTarget = (roundKey, metric) => Math.round(targetData.reduce((acc, d) => acc + d[roundKey][metric], 0) / targetData.length || 0);
+
+                labels = ['Standard', 'Re-Audit', 'Extra REV', '2nd Re-Audit', 'CCV'];
                 
-                data25r1 = [ safeAvg(targetData, d => d.rev25r1.std), safeAvg(targetData, d => d.rev25r1.re), safeAvg(targetData, d => d.rev25r1.extra), safeAvg(targetData, d => d.rev25r1.re2), safeAvg(targetData, d => d.rev25r1.ccv), safeAvg(targetData, d => d.rev25r1.crit) ];
-                data25r2 = [ safeAvg(targetData, d => d.rev25r2.std), safeAvg(targetData, d => d.rev25r2.re), safeAvg(targetData, d => d.rev25r2.extra), safeAvg(targetData, d => d.rev25r2.re2), safeAvg(targetData, d => d.rev25r2.ccv), safeAvg(targetData, d => d.rev25r2.crit) ];
-                data26r1 = [ safeAvg(targetData, d => d.rev26r1.std), safeAvg(targetData, d => d.rev26r1.re), safeAvg(targetData, d => d.rev26r1.extra), safeAvg(targetData, d => d.rev26r1.re2), safeAvg(targetData, d => d.rev26r1.ccv), safeAvg(targetData, d => d.rev26r1.crit) ];
-                data26r2 = [ safeAvg(targetData, d => d.rev26r2.std), safeAvg(targetData, d => d.rev26r2.re), safeAvg(targetData, d => d.rev26r2.extra), safeAvg(targetData, d => d.rev26r2.re2), safeAvg(targetData, d => d.rev26r2.ccv), safeAvg(targetData, d => d.rev26r2.crit) ];
+                data25r1 = [ avgTarget('rev25r1', 'std'), avgTarget('rev25r1', 're'), avgTarget('rev25r1', 'extra'), avgTarget('rev25r1', 're2'), avgTarget('rev25r1', 'ccv') ];
+                data25r2 = [ avgTarget('rev25r2', 'std'), avgTarget('rev25r2', 're'), avgTarget('rev25r2', 'extra'), avgTarget('rev25r2', 're2'), avgTarget('rev25r2', 'ccv') ];
+                data26r1 = [ avgTarget('rev26r1', 'std'), avgTarget('rev26r1', 're'), avgTarget('rev26r1', 'extra'), avgTarget('rev26r1', 're2'), avgTarget('rev26r1', 'ccv') ];
+                data26r2 = [ avgTarget('rev26r2', 'std'), avgTarget('rev26r2', 're'), avgTarget('rev26r2', 'extra'), avgTarget('rev26r2', 're2'), avgTarget('rev26r2', 'ccv') ];
 
             } else if (isMidFilter) {
                 selectEl.classList.remove('hidden');
-                document.getElementById('title-rev-compare').innerText = "REV por Sucursal: " + selectEl.options[selectEl.selectedIndex].text;
+                document.getElementById('title-rev-compare').innerText = "REV por Sucursal";
                 
                 const sucStats = sucursales.map(suc => {
                     const sub = targetData.filter(d => d.sucursal === suc);
-                    const avgR25_1 = safeAvg(sub, d => d.rev25r1[currentRevType]);
-                    const avgR25_2 = safeAvg(sub, d => d.rev25r2[currentRevType]);
-                    const avgR26_1 = safeAvg(sub, d => d.rev26r1[currentRevType]);
-                    const avgR26_2 = safeAvg(sub, d => d.rev26r2[currentRevType]);
+                    const avg = (yearRound) => Math.round(sub.reduce((acc, d) => acc + d[yearRound][currentRevType], 0) / sub.length || 0);
+                    return { 
+                        suc: suc, 
+                        r25_1: avg('rev25r1'), r25_2: avg('rev25r2'), 
+                        r26_1: avg('rev26r1'), r26_2: avg('rev26r2'),
+                        total: avg('rev25r1') + avg('rev25r2') + avg('rev26r1') + avg('rev26r2')
+                    };
+                }).sort((a,b) => b.total - a.total);
+
+                labels = sucStats.map(s => s.suc);
+                data25r1 = sucStats.map(s => s.r25_1);
+                data25r2 = sucStats.map(s => s.r25_2);
+                data26r1 = sucStats.map(s => s.r26_1);
+                data26r2 = sucStats.map(s => s.r26_2);
+                
+            } else {
+                selectEl.classList.remove('hidden');
+                document.getElementById('title-rev-compare').innerText = "Evolución Trimestral REV";
+                labels = ['T1', 'T2', 'T3', 'T4'];
+                
+                labels.forEach(tri => {
+                    const sub = targetData.filter(d => d.trimestre === tri);
+                    const avg = (yearRound) => Math.round(sub.reduce((acc, d) => acc + d[yearRound][currentRevType], 0) / sub.length || 0);
+                    data25r1.push(avg('rev25r1'));
+                    data25r2.push(avg('rev25r2'));
+                    data26r1.push(avg('rev26r1'));
+                    data26r2.push(avg('rev26r2'));
+                });
+            }
+
+            const ctx = document.getElementById('chart-rev-compare').getContext('2d');
+            ChartsObj['rev-compare'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '2025 R1', data: data25r1, backgroundColor: '#cbd5e1', borderRadius: 6 },
+                        { label: '2025 R2', data: data25r2, backgroundColor: '#94a3b8', borderRadius: 6 },
+                        { label: '2026 R1', data: data26r1, backgroundColor: activePalette.m2, borderRadius: 6 },
+                        { label: '2026 R2', data: data26r2, backgroundColor: activePalette.m1, borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 35 } },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 25, font: { weight: 'bold' } } },
+                        datalabels: datalabelsZpConfig, tooltip: tooltipZpConfig
+                    },
+                    scales: {
+                        y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, border: { dash: [4,4] } },
+                        x: { grid: { display: false }, ticks: { maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function renderRecCompareChart() {
+            if (ChartsObj['rec-compare']) ChartsObj['rec-compare'].destroy();
+            
+            const targetData = FilteredData.filter(d => !d.cadena.toLowerCase().includes('church') && !d.cadena.toLowerCase().includes('pte'));
+            if (targetData.length === 0 || (selections.indicador !== 'Todos' && selections.indicador !== 'm3')) return;
+
+            const sucursales = [...new Set(targetData.map(d => d.sucursal))];
+            
+            const isSingleSucursal = selections.gerente_sucursal !== 'Todos' || sucursales.length === 1;
+            const isMidFilter = selections.distrito !== 'Todos' && !isSingleSucursal;
+
+            let labels = [];
+            let data25r1 = [], data25r2 = [], data26r1 = [], data26r2 = [];
+
+            if (isSingleSucursal) {
+                document.getElementById('title-rec-compare').innerText = "Auditorías REC: " + sucursales[0];
+                labels = ['REC (Critical Visit)'];
+                data25r1 = [ Math.round(targetData.reduce((acc, d) => acc + d.rec25r1, 0) / targetData.length || 0) ];
+                data25r2 = [ Math.round(targetData.reduce((acc, d) => acc + d.rec25r2, 0) / targetData.length || 0) ];
+                data26r1 = [ Math.round(targetData.reduce((acc, d) => acc + d.rec26r1, 0) / targetData.length || 0) ];
+                data26r2 = [ Math.round(targetData.reduce((acc, d) => acc + d.rec26r2, 0) / targetData.length || 0) ];
+
+            } else if (isMidFilter) {
+                document.getElementById('title-rec-compare').innerText = "REC por Sucursal";
+                const sucStats = sucursales.map(suc => {
+                    const sub = targetData.filter(d => d.sucursal === suc);
+                    const avgR25_1 = Math.round(sub.reduce((acc, d) => acc + d.rec25r1, 0) / sub.length || 0);
+                    const avgR25_2 = Math.round(sub.reduce((acc, d) => acc + d.rec25r2, 0) / sub.length || 0);
+                    const avgR26_1 = Math.round(sub.reduce((acc, d) => acc + d.rec26r1, 0) / sub.length || 0);
+                    const avgR26_2 = Math.round(sub.reduce((acc, d) => acc + d.rec26r2, 0) / sub.length || 0);
                     
                     return { 
                         suc: suc, r25_1: avgR25_1, r25_2: avgR25_2, r26_1: avgR26_1, r26_2: avgR26_2,
@@ -853,21 +1208,20 @@
                 data26r2 = sucStats.map(s => s.r26_2);
                 
             } else {
-                selectEl.classList.remove('hidden');
-                document.getElementById('title-rev-compare').innerText = "Evolución Mensual REV: " + selectEl.options[selectEl.selectedIndex].text;
-                labels = MESES_NOM;
+                document.getElementById('title-rec-compare').innerText = "Evolución Trimestral REC";
+                labels = ['T1', 'T2', 'T3', 'T4'];
                 
-                MESES_NOM.forEach(mes => {
-                    const sub = targetData.filter(d => d.mes === mes);
-                    data25r1.push(safeAvg(sub, d => d.rev25r1[currentRevType]));
-                    data25r2.push(safeAvg(sub, d => d.rev25r2[currentRevType]));
-                    data26r1.push(safeAvg(sub, d => d.rev26r1[currentRevType]));
-                    data26r2.push(safeAvg(sub, d => d.rev26r2[currentRevType]));
+                labels.forEach(tri => {
+                    const sub = targetData.filter(d => d.trimestre === tri);
+                    data25r1.push(Math.round(sub.reduce((acc, d) => acc + d.rec25r1, 0) / sub.length || 0));
+                    data25r2.push(Math.round(sub.reduce((acc, d) => acc + d.rec25r2, 0) / sub.length || 0));
+                    data26r1.push(Math.round(sub.reduce((acc, d) => acc + d.rec26r1, 0) / sub.length || 0));
+                    data26r2.push(Math.round(sub.reduce((acc, d) => acc + d.rec26r2, 0) / sub.length || 0));
                 });
             }
 
-            const ctx = document.getElementById('chart-rev-compare').getContext('2d');
-            ChartsObj['rev-compare'] = new Chart(ctx, {
+            const ctx = document.getElementById('chart-rec-compare').getContext('2d');
+            ChartsObj['rec-compare'] = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -900,37 +1254,37 @@
 
             const sucursales = [...new Set(targetData.map(d => d.sucursal))];
             
-            const isSingleSucursal = selections.sucursal !== 'Todos' || sucursales.length === 1;
-            const isMidFilter = (selections.distrito !== 'Todos' || selections.gerente !== 'Todos') && !isSingleSucursal;
+            const isSingleSucursal = selections.gerente_sucursal !== 'Todos' || sucursales.length === 1;
+            const isMidFilter = selections.distrito !== 'Todos' && !isSingleSucursal;
 
             let labels = [];
             let data25 = [], data26 = [];
 
             if (isSingleSucursal) {
-                document.getElementById('title-oer-compare').innerText = "Auditorías OER: " + sucursales[0];
-                labels = ['OER'];
-                data25 = [ safeAvg(targetData, d => d.rev25r1.std) ]; 
-                data26 = [ safeAvg(targetData, d => d.rev26r1.std) ];
+                document.getElementById('title-oer-compare').innerText = "Auditorías OER / RAV: " + sucursales[0];
+                labels = ['OER 2025 vs RAV 2026'];
+                data25 = [ Math.round(targetData.reduce((acc, d) => acc + d.rev25r1.std, 0) / targetData.length || 0) ]; 
+                data26 = [ Math.round(targetData.reduce((acc, d) => acc + d.rev26r1.std, 0) / targetData.length || 0) ];
             } else if (isMidFilter) {
-                document.getElementById('title-oer-compare').innerText = "Comparativo OER por Sucursal";
+                document.getElementById('title-oer-compare').innerText = "Comparativo OER / RAV por Sucursal";
                 const sucStats = sucursales.map(suc => {
                     const sub = targetData.filter(d => d.sucursal === suc);
-                    const r25Val = safeAvg(sub, d => d.rev25r1.std);
-                    const r26Val = safeAvg(sub, d => d.rev26r1.std);
-                    return { suc: suc, r25: r25Val, r26: r26Val, total: (r25Val||0) + (r26Val||0) };
-                }).sort((a,b) => b.total - a.total);
+                    const r25Val = Math.round(sub.reduce((acc, d) => acc + d['rev25r1']['std'], 0) / sub.length || 0);
+                    const r26Val = Math.round(sub.reduce((acc, d) => acc + d['rev26r1']['std'], 0) / sub.length || 0);
+                    return { suc: suc, r25: r25Val, r26: r26Val };
+                }).sort((a,b) => (b.r25 + b.r26) - (a.r25 + a.r26));
 
                 labels = sucStats.map(s => s.suc);
                 data25 = sucStats.map(s => s.r25);
                 data26 = sucStats.map(s => s.r26);
             } else {
-                document.getElementById('title-oer-compare').innerText = "Evolución Mensual OER (2025 vs 2026)";
-                labels = MESES_NOM;
+                document.getElementById('title-oer-compare').innerText = "Evolución Trimestral OER / RAV";
+                labels = ['T1', 'T2', 'T3', 'T4'];
                 
-                MESES_NOM.forEach(mes => {
-                    const sub = targetData.filter(d => d.mes === mes);
-                    data25.push(safeAvg(sub, d => d.rev25r1.std));
-                    data26.push(safeAvg(sub, d => d.rev26r1.std));
+                labels.forEach(tri => {
+                    const sub = targetData.filter(d => d.trimestre === tri);
+                    data25.push(Math.round(sub.reduce((acc, d) => acc + d.rev25r1.std, 0) / sub.length || 0));
+                    data26.push(Math.round(sub.reduce((acc, d) => acc + d.rev26r1.std, 0) / sub.length || 0));
                 });
             }
 
@@ -940,8 +1294,8 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: '2025', data: data25, backgroundColor: '#cbd5e1', borderRadius: 6 },
-                        { label: '2026', data: data26, backgroundColor: activePalette.m1, borderRadius: 6 }
+                        { label: 'OER 2025', data: data25, backgroundColor: '#cbd5e1', borderRadius: 6 },
+                        { label: 'RAV 2026', data: data26, backgroundColor: activePalette.m1, borderRadius: 6 }
                     ]
                 },
                 options: {
@@ -958,44 +1312,123 @@
             });
         }
 
-        function renderLineChart() {
-            if (ChartsObj.line) ChartsObj.line.destroy();
-            const dataMes = MESES_NOM.map(mes => {
-                const sub = FilteredData.filter(d => d.mes === mes);
-                if (!sub.length) return null;
-                return {
-                    label: mes,
-                    srv: safeAvg(sub, d => d.srv),
-                    m2: safeAvg(sub, d => d.m2),
-                    m3: safeAvg(sub, d => d.m3),
-                    cert: safeAvg(sub, d => d.rrhh.certGerencial),
-                    ocup: safeAvg(sub, d => d.rrhh.ocPlantilla)
-                };
-            }).filter(Boolean);
+        function renderGerenteChart() {
+            if (ChartsObj['chart-gerente']) ChartsObj['chart-gerente'].destroy();
+            
+            if (FilteredData.length === 0) return;
 
+            const managersMap = {};
+            FilteredData.forEach(d => {
+                if (!managersMap[d.gerente]) {
+                    managersMap[d.gerente] = { cadena: d.cadena, suma: 0, count: 0, srv: 0, m2: 0, m3: 0, cert: 0, ocup: 0 };
+                }
+                managersMap[d.gerente].suma += d.promedio;
+                managersMap[d.gerente].srv += d.srv;
+                managersMap[d.gerente].m2 += d.m2;
+                managersMap[d.gerente].m3 += d.m3;
+                managersMap[d.gerente].cert += d.rrhh.certGerencial;
+                managersMap[d.gerente].ocup += d.rrhh.ocPlantilla;
+                managersMap[d.gerente].count++;
+            });
+
+            const managerStats = Object.entries(managersMap).map(([gerente, g]) => ({
+                gerente: gerente,
+                cadena: g.cadena,
+                pro: Math.round(g.suma / g.count) || 0,
+                srv: Math.round(g.srv / g.count) || 0,
+                m2: Math.round(g.m2 / g.count) || 0,
+                m3: Math.round(g.m3 / g.count) || 0,
+                cert: Math.round(g.cert / g.count) || 0,
+                ocup: Math.round(g.ocup / g.count) || 0
+            }));
+
+            managerStats.sort((a, b) => {
+                if (a.cadena < b.cadena) return -1;
+                if (a.cadena > b.cadena) return 1;
+                return b.pro - a.pro; 
+            });
+
+            const labels = managerStats.map(m => m.gerente);
+            const cadenas = [...new Set(managerStats.map(m => m.cadena))];
             const ind = selections.indicador;
-            const ds = [
-                (ind === 'Todos' || ind === 'srv') && { label: 'ServSafe', data: dataMes.map(d => d.srv), borderColor: activePalette.m1, backgroundColor: activePalette.m1, tension: 0.4, pointRadius: 5 },
-                (ind === 'Todos' || ind === 'm2') && { label: document.getElementById('label-m2').innerText, data: dataMes.map(d => d.m2), borderColor: activePalette.m2, backgroundColor: activePalette.m2, tension: 0.4, pointRadius: 5 },
-                (ind === 'Todos' || ind === 'm3') && { label: document.getElementById('label-m3').innerText, data: dataMes.map(d => d.m3), borderColor: activePalette.m3, backgroundColor: activePalette.m3, tension: 0.4, pointRadius: 5 },
-                (ind === 'Todos' || ind === 'cert') && { label: 'Cert. Gerencial', data: dataMes.map(d => d.cert), borderColor: '#1F3864', backgroundColor: '#1F3864', tension: 0.4, pointRadius: 5 },
-                (ind === 'Todos' || ind === 'ocup') && { label: 'Ocup. Plantilla', data: dataMes.map(d => d.ocup), borderColor: '#4472C4', backgroundColor: '#4472C4', tension: 0.4, pointRadius: 5 }
-            ].filter(Boolean);
+            
+            let metricKey = 'pro';
+            if (ind === 'srv') metricKey = 'srv';
+            else if (ind === 'm2') metricKey = 'm2';
+            else if (ind === 'm3') metricKey = 'm3';
+            else if (ind === 'cert') metricKey = 'cert';
+            else if (ind === 'ocup') metricKey = 'ocup';
 
-            const ctx = document.getElementById('chart-line').getContext('2d');
-            ChartsObj.line = new Chart(ctx, {
-                type: 'line',
-                data: { labels: dataMes.map(d => d.label), datasets: ds },
+            const ds = cadenas.map((cadena, index) => {
+                const colors = ['#2F5597', '#8FAADC', '#B4C6E7', '#1F3864'];
+                const color = colors[index % colors.length];
+
+                return {
+                    label: cadena,
+                    data: managerStats.map(m => m.cadena === cadena ? m[metricKey] : null), 
+                    backgroundColor: color,
+                    borderRadius: 6
+                };
+            });
+
+            const ctx = document.getElementById('chart-gerente').getContext('2d');
+            ChartsObj['chart-gerente'] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labels, datasets: ds },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { 
-                        datalabels: { display: false }, 
-                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 25, font: { weight: 'bold' } } },
-                        tooltip: tooltipZpConfig
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 35 } },
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { padding: 25, font: { weight: 'bold' } },
+                            onClick: function(e, legendItem, legend) {
+                                const chart = legend.chart;
+                                const index = legendItem.datasetIndex;
+                                
+                                if (chart.isDatasetVisible(index)) {
+                                    chart.hide(index);
+                                } else {
+                                    chart.show(index);
+                                }
+
+                                const visibleCadenas = chart.data.datasets
+                                    .filter((d, i) => chart.isDatasetVisible(i))
+                                    .map(d => d.label);
+
+                                const activeManagers = managerStats.filter(m => visibleCadenas.includes(m.cadena));
+                                const newLabels = activeManagers.map(m => m.gerente);
+
+                                chart.data.labels = newLabels;
+
+                                chart.data.datasets.forEach(dataset => {
+                                    dataset.data = newLabels.map(label => {
+                                        const manager = activeManagers.find(m => m.gerente === label);
+                                        return manager && manager.cadena === dataset.label ? manager[metricKey] : null;
+                                    });
+                                });
+
+                                chart.update();
+                            }
+                        },
+                        datalabels: { 
+                            anchor: 'end', align: 'top', 
+                            formatter: (v) => v > 0 ? v + '%' : '', 
+                            font: { weight: 'black', size: 10 }, color: '#475569' 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.y + '%';
+                                    return label;
+                                }
+                            }
+                        }
                     },
-                    scales: { 
-                        y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, border: { dash: [4,4] } }, 
-                        x: { grid: { display: false } } 
+                    scales: {
+                        y: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' }, border: { dash: [4,4] } },
+                        x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 45, minRotation: 45, font: { size: 9 } } }
                     }
                 }
             });
@@ -1007,17 +1440,15 @@
             
             const stats = groups.map(g => {
                 const sub = FilteredData.filter(d => d[field] === g);
-                const srv = safeAvg(sub, d => d.srv);
-                const m2 = safeAvg(sub, d => d.m2);
-                const m3 = safeAvg(sub, d => d.m3);
-                const cert = safeAvg(sub, d => d.rrhh.certGerencial);
-                const ocup = safeAvg(sub, d => d.rrhh.ocPlantilla);
+                const srv = Math.round(sub.reduce((a,b) => a+b.srv, 0) / sub.length);
+                const m2 = Math.round(sub.reduce((a,b) => a+b.m2, 0) / sub.length);
+                const m3 = Math.round(sub.reduce((a,b) => a+b.m3, 0) / sub.length);
+                const cert = Math.round(sub.reduce((a,b) => a+b.rrhh.certGerencial, 0) / sub.length);
+                const ocup = Math.round(sub.reduce((a,b) => a+b.rrhh.ocPlantilla, 0) / sub.length);
 
-                const active = [{v:srv}, {v:m2}, {v:m3}].filter(x => x.v !== null);
-                const pro = active.length > 0 ? safeAvg(active, x => x.v) : null;
-                
+                const pro = Math.round((srv + m2 + m3) / 3);
                 return { label: g, srv, m2, m3, cert, ocup, pro };
-            }).filter(item => item.pro !== null).sort((a,b) => b.pro - a.pro).slice(0, 15);
+            }).sort((a,b) => b.pro - a.pro).slice(0, 15);
 
             const ind = selections.indicador;
             const ds = [
@@ -1036,7 +1467,21 @@
                     responsive: true, maintainAspectRatio: false, layout: { padding: { top: 35 } },
                     plugins: {
                         legend: { position: 'bottom', labels: { padding: 25, font: { weight: 'bold' } } },
-                        datalabels: datalabelsZpConfig, tooltip: tooltipZpConfig
+                        datalabels: { 
+                            anchor: 'end', align: 'top', 
+                            formatter: (v) => v > 0 ? v + '%' : '', 
+                            font: { weight: 'black', size: 10 }, color: '#475569' 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.y + '%';
+                                    return label;
+                                }
+                            }
+                        }
                     },
                     scales: {
                         y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, border: { dash: [4,4] } },
@@ -1058,7 +1503,13 @@
             const groupedZP = {};
             zpData.forEach(d => {
                 if (!groupedZP[d.sucursal]) {
-                    groupedZP[d.sucursal] = { cadena: d.cadena, causes: new Set() };
+                    groupedZP[d.sucursal] = { 
+                        cadena: d.cadena, 
+                        region: d.region,
+                        distrito: d.distrito,
+                        gerente: d.gerente,
+                        causes: new Set() 
+                    };
                 }
                 if (d.zpIncidences) {
                     d.zpIncidences.forEach(inc => groupedZP[d.sucursal].causes.add(inc));
@@ -1079,6 +1530,23 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         ${Object.entries(groupedZP).map(([sucursal, info]) => {
                             const causesHtml = Array.from(info.causes).map(c => `<span class="inline-block bg-red-100 text-red-700 text-[9px] px-2 py-0.5 rounded-md font-bold mt-1 mr-1">${c}</span>`).join('');
+                            
+                            let contextHtml = '';
+                            if (selections.distrito !== 'Todos' || selections.gerente_sucursal !== 'Todos') {
+                                contextHtml = `<p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Gerente:</span> ${info.gerente}</p>`;
+                            } else if (selections.region !== 'Todos') {
+                                contextHtml = `
+                                    <p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Distrito:</span> ${info.distrito}</p>
+                                    <p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Gerente:</span> ${info.gerente}</p>
+                                `;
+                            } else {
+                                contextHtml = `
+                                    <p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Región:</span> ${info.region}</p>
+                                    <p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Distrito:</span> ${info.distrito}</p>
+                                    <p class="text-[9px] text-slate-500 truncate"><span class="font-bold">Gerente:</span> ${info.gerente}</p>
+                                `;
+                            }
+
                             return `
                                 <div class="bg-white p-4 rounded-2xl border border-red-100 flex items-start gap-4 shadow-sm">
                                     <div class="w-8 h-8 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -1087,6 +1555,9 @@
                                     <div class="overflow-hidden flex-1">
                                         <p class="font-bold text-slate-800 text-sm truncate" title="${sucursal}">${sucursal}</p>
                                         <p class="text-[10px] text-red-500 font-bold uppercase truncate mb-1">${info.cadena}</p>
+                                        <div class="mb-1.5 mt-0.5">
+                                            ${contextHtml}
+                                        </div>
                                         <div class="flex flex-wrap">
                                             ${causesHtml}
                                         </div>
@@ -1171,8 +1642,7 @@
             document.getElementById('badge-count').innerText = `${sorted.length} REGISTROS MOSTRADOS`;
             
             const formatTablePct = (v) => {
-                if (v === null) return '-';
-                if (v < 0) return '<span class="text-red-500 font-black" title="Zero Protocol">0% ZP</span>';
+                if (v === null || v === 0) return '0%';
                 return Math.round(v) + '%';
             };
 
@@ -1202,8 +1672,14 @@
         function renderRankings() {
             const grouped = {};
             FilteredData.forEach(d => {
-                if (!grouped[d.sucursal]) grouped[d.sucursal] = { name: d.sucursal, cadena: d.cadena, dataArr: [] };
-                grouped[d.sucursal].dataArr.push(d);
+                if (!grouped[d.sucursal]) grouped[d.sucursal] = { name: d.sucursal, cadena: d.cadena, suma: 0, count: 0, srv: 0, m2: 0, m3: 0, cert: 0, ocup: 0 };
+                grouped[d.sucursal].suma += d.promedio;
+                grouped[d.sucursal].srv += d.srv;
+                grouped[d.sucursal].m2 += d.m2;
+                grouped[d.sucursal].m3 += d.m3;
+                grouped[d.sucursal].cert += d.rrhh.certGerencial;
+                grouped[d.sucursal].ocup += d.rrhh.ocPlantilla;
+                grouped[d.sucursal].count++;
             });
 
             let sortKey = 'avg';
@@ -1216,12 +1692,12 @@
             const list = Object.values(grouped).map(g => {
                 return { 
                     name: g.name, cadena: g.cadena, 
-                    avg: safeAvg(g.dataArr, d => d.promedio),
-                    srv: safeAvg(g.dataArr, d => d.srv),
-                    m2: safeAvg(g.dataArr, d => d.m2),
-                    m3: safeAvg(g.dataArr, d => d.m3),
-                    cert: safeAvg(g.dataArr, d => d.rrhh.certGerencial),
-                    ocup: safeAvg(g.dataArr, d => d.rrhh.ocPlantilla)
+                    avg: Math.round(g.suma / g.count),
+                    srv: Math.round(g.srv / g.count),
+                    m2: Math.round(g.m2 / g.count),
+                    m3: Math.round(g.m3 / g.count),
+                    cert: Math.round(g.cert / g.count),
+                    ocup: Math.round(g.ocup / g.count)
                 }
             }).filter(item => item[sortKey] !== null).sort((a,b) => b[sortKey] - a[sortKey]);
             
@@ -1237,7 +1713,7 @@
                 'ocup': 'OCUP. PLANTILLA'
             };
 
-            const formatRankVal = (v) => v < 0 ? '<span class="text-red-500">0% ZP</span>' : v + '%';
+            const formatRankVal = (v) => v <= 0 ? '0%' : Math.round(v) + '%';
 
             const renderList = (data, containerId, colorClass) => {
                 const container = document.getElementById(containerId);
@@ -1268,82 +1744,229 @@
             setTimeout(() => overlay.style.display = 'none', 500);
         }
 
+        // --- Función Helper para obtener los filtros en texto ---
+        function getActiveFiltersText() {
+            let filters = [];
+            if(selections.cadena !== 'Todos') filters.push(`Cadena: ${selections.cadena}`);
+            if(selections.region !== 'Todos') filters.push(`Región: ${selections.region}`);
+            if(selections.distrito !== 'Todos') filters.push(`Distrito: ${selections.distrito}`);
+            if(selections.gerente_sucursal !== 'Todos') filters.push(`Filtro: ${selections.gerente_sucursal}`);
+            if(selections.trimestre !== 'Todos') filters.push(`Trimestre: ${selections.trimestre}`);
+            if(selections.mes !== 'Todos') filters.push(`Mes: ${selections.mes}`);
+            
+            return filters.length > 0 ? filters.join(' | ') : 'Vista General Consolidada (Sin filtros)';
+        }
+
+        // --- Listado dinámico de secciones a exportar ---
+        function getExportSections() {
+            return [
+                { id: 'export-kpis', title: 'Resumen de Indicadores Clave (KPIs)' },
+                { id: 'container-rev-compare', title: 'Evolución de Auditorías Operativas (REV)' },
+                { id: 'container-rec-compare', title: 'Evolución de Auditorías (Critical Visit)' },
+                { id: 'container-oer-compare', title: 'Auditorías Operativas (OER / RAV)' },
+                { id: 'export-chart-zp', title: document.getElementById('title-chart-zp')?.innerText || 'Zero Protocol' },
+                { id: 'export-chart-gerente', title: 'Resultados por Gerente de Negocio' },
+                { id: 'export-chart-cadena', title: document.getElementById('title-chart-cadena')?.innerText || 'Comparativa General' },
+                { id: 'export-chart-distrito', title: 'Desempeño Crítico por Gerente de Distrito' },
+                { id: 'zero-protocol-wrapper', title: 'Alerta Crítica Operativa: Zero Protocol' },
+                { id: 'sucesion-wrapper', title: 'Desarrollo de Talento: Plan de Sucesión' },
+                { id: 'export-rankings', title: 'Top 5: Excelencia y Foco de Atención' },
+                { id: 'export-table', title: 'Registro Detallado por Sucursal' }
+            ];
+        }
+
+        // --- Función Avanzada para Exportar a PPTX (Reporte Ejecutivo) ---
         async function downloadPPTX() {
             const btn = document.getElementById('btn-download-pptx');
             const originalContent = btn.innerHTML;
             
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando PPTX...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Creando Presentación...';
             lucide.createIcons();
 
-            const element = document.getElementById('dashboard-content');
-            
             try {
-                const canvas = await html2canvas(element, {
-                    scale: 2, 
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#f4f7f9'
+                let pres = new PptxGenJS();
+                pres.layout = 'LAYOUT_16x9';
+
+                // Diapositiva de Portada
+                let slideCover = pres.addSlide();
+                const primaryColor = activePalette.m1.replace('#', '');
+                slideCover.background = { color: primaryColor };
+                
+                slideCover.addText("REPORTE EJECUTIVO DE RESULTADOS", { 
+                    x: 0.5, y: 1.8, w: 9, h: 1, 
+                    fontSize: 40, bold: true, color: "FFFFFF", align: "center", fontFace: "Arial" 
                 });
                 
-                const imgData = canvas.toDataURL('image/png');
-                let pres = new PptxGenJS();
+                slideCover.addText(document.getElementById('dynamic-subtitle').innerText, { 
+                    x: 0.5, y: 2.8, w: 9, h: 0.5, 
+                    fontSize: 22, color: "E2E8F0", align: "center", fontFace: "Arial" 
+                });
+
+                slideCover.addText("Segmentación: " + getActiveFiltersText(), { 
+                    x: 0.5, y: 3.5, w: 9, h: 0.5, 
+                    fontSize: 12, color: "CBD5E1", align: "center", fontFace: "Arial", italic: true 
+                });
                 
-                const widthInInches = 10;
-                const heightInInches = (canvas.height / canvas.width) * widthInInches;
-                
-                pres.defineLayout({ name:'DASHBOARD_LAYOUT', width: widthInInches, height: heightInInches });
-                pres.layout = 'DASHBOARD_LAYOUT';
-                
-                let slide = pres.addSlide();
-                slide.background = { color: "F4F7F9" };
-                slide.addImage({ data: imgData, x: 0, y: 0, w: widthInInches, h: heightInInches });
-                
+                slideCover.addText("Fecha de Emisión: " + document.getElementById('current-date').innerText, { 
+                    x: 0.5, y: 4.8, w: 9, h: 0.5, 
+                    fontSize: 10, color: "FFFFFF", align: "center", fontFace: "Arial" 
+                });
+
+                const sections = getExportSections();
+
+                for (const sec of sections) {
+                    const el = document.getElementById(sec.id);
+                    // Omitir contenedores ocultos o sin contenido
+                    if (!el || el.innerHTML.trim() === '' || el.classList.contains('hidden') || el.style.display === 'none') continue;
+                    if (el.children.length === 0) continue; 
+
+                    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    
+                    let slide = pres.addSlide();
+                    slide.background = { color: "F4F7F9" };
+                    
+                    // Título de la diapositiva
+                    slide.addText(sec.title, { 
+                        x: 0.5, y: 0.3, w: 9, h: 0.5, 
+                        fontSize: 20, bold: true, color: primaryColor, fontFace: "Arial" 
+                    });
+
+                    // Línea divisoria
+                    slide.addShape(pres.ShapeType.line, { x: 0.5, y: 0.85, w: 9, h: 0, line: { color: primaryColor, width: 2 } });
+
+                    // Cálculo de aspecto para centrar la imagen
+                    const maxW = 9.0;
+                    const maxH = 4.2;
+                    const ratio = canvas.width / canvas.height;
+                    let finalW = maxW;
+                    let finalH = finalW / ratio;
+
+                    if (finalH > maxH) {
+                        finalH = maxH;
+                        finalW = finalH * ratio;
+                    }
+
+                    const finalX = (10 - finalW) / 2; 
+                    const finalY = 1.0 + (maxH - finalH) / 2; 
+
+                    slide.addImage({ data: imgData, x: finalX, y: finalY, w: finalW, h: finalH });
+                }
+
+                // Generar y descargar
                 const cadena = selections.cadena !== 'Todos' ? selections.cadena : 'General';
-                const sucursal = selections.sucursal !== 'Todos' ? selections.sucursal : '';
-                let filename = `Dashboard_${cadena}`;
+                const sucursal = selections.gerente_sucursal !== 'Todos' ? selections.gerente_sucursal : '';
+                let filename = `Reporte_Ejecutivo_${cadena}`;
                 if(sucursal) filename += `_${sucursal}`;
                 
                 await pres.writeFile({ fileName: filename.replace(/\s+/g, '_') + '.pptx' });
+
             } catch (error) {
                 console.error("Error al generar PPTX:", error);
-                alert("Ocurrió un error al exportar a PowerPoint.");
+                alert("Ocurrió un error al exportar la presentación.");
             } finally {
                 btn.innerHTML = originalContent;
                 lucide.createIcons();
             }
         }
 
+        // --- Función Avanzada para Exportar a PDF (Reporte Ejecutivo) ---
         async function downloadPDF() {
             const btn = document.getElementById('btn-download-pdf');
             const originalContent = btn.innerHTML;
             
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando PDF...';
             lucide.createIcons();
-
-            const element = document.getElementById('dashboard-content');
             
             try {
-                const canvas = await html2canvas(element, {
-                    scale: 2, 
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#f4f7f9'
-                });
-                
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const { jsPDF } = window.jspdf;
+                // PDF en formato apaisado (A4 horizontal)
+                const pdf = new jsPDF('landscape', 'pt', 'a4');
+                const pdfW = pdf.internal.pageSize.getWidth();
+                const pdfH = pdf.internal.pageSize.getHeight();
+                const margin = 40;
+
+                // 1. Crear Portada
+                const m1Hex = activePalette.m1; 
+                pdf.setFillColor(m1Hex);
+                pdf.rect(0, 0, pdfW, pdfH, 'F');
                 
-                const pdf = new jsPDF({
-                    orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
-                    unit: 'px',
-                    format: [canvas.width, canvas.height]
-                });
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(36);
+                pdf.setFont("helvetica", "bold");
+                pdf.text("REPORTE EJECUTIVO DE RESULTADOS", pdfW / 2, pdfH / 2 - 40, { align: "center" });
                 
-                pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+                pdf.setFontSize(18);
+                pdf.setFont("helvetica", "normal");
+                pdf.text(document.getElementById('dynamic-subtitle').innerText, pdfW / 2, pdfH / 2 + 10, { align: "center" });
                 
+                pdf.setFontSize(11);
+                pdf.setTextColor(220, 226, 240);
+                pdf.text("Segmentación: " + getActiveFiltersText(), pdfW / 2, pdfH / 2 + 60, { align: "center" });
+                
+                pdf.setFontSize(10);
+                pdf.text("Fecha de emisión: " + document.getElementById('current-date').innerText, pdfW / 2, pdfH - 50, { align: "center" });
+
+                const sections = getExportSections();
+
+                // 2. Iterar y capturar cada sección en una página nueva
+                for (const sec of sections) {
+                    const el = document.getElementById(sec.id);
+                    if (!el || el.innerHTML.trim() === '' || el.classList.contains('hidden') || el.style.display === 'none') continue;
+                    if (el.children.length === 0) continue;
+
+                    // Fondo blanco puro para la captura
+                    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+                    pdf.addPage();
+                    
+                    // Fondo de página
+                    pdf.setFillColor(244, 247, 249); // bg-slate-50
+                    pdf.rect(0, 0, pdfW, pdfH, 'F');
+
+                    // Encabezado de página
+                    pdf.setTextColor(30, 41, 59); // text-slate-800
+                    pdf.setFontSize(16);
+                    pdf.setFont("helvetica", "bold");
+                    pdf.text(sec.title, margin, margin + 15);
+
+                    // Línea divisoria
+                    pdf.setDrawColor(m1Hex);
+                    pdf.setLineWidth(1.5);
+                    pdf.line(margin, margin + 25, pdfW - margin, margin + 25);
+                    
+                    // Pie de página
+                    pdf.setTextColor(148, 163, 184); // text-slate-400
+                    pdf.setFontSize(8);
+                    pdf.setFont("helvetica", "normal");
+                    pdf.text(getActiveFiltersText(), margin, pdfH - margin + 10);
+                    pdf.text(document.getElementById('current-date').innerText, pdfW - margin, pdfH - margin + 10, { align: 'right' });
+                    
+                    // Cálculo de escala para la imagen preservando proporciones
+                    const maxW = pdfW - (margin * 2);
+                    const maxH = pdfH - (margin * 2) - 60; // Descontar header y footer
+                    const ratio = canvas.width / canvas.height;
+                    
+                    let finalW = maxW;
+                    let finalH = finalW / ratio;
+
+                    if (finalH > maxH) {
+                        finalH = maxH;
+                        finalW = finalH * ratio;
+                    }
+
+                    // Centrado perfecto en la página
+                    const finalX = margin + (maxW - finalW) / 2;
+                    const finalY = margin + 40 + (maxH - finalH) / 2;
+
+                    pdf.addImage(imgData, 'JPEG', finalX, finalY, finalW, finalH);
+                }
+                
+                // 3. Descargar PDF final
                 const cadena = selections.cadena !== 'Todos' ? selections.cadena : 'General';
-                const sucursal = selections.sucursal !== 'Todos' ? selections.sucursal : '';
-                let filename = `Dashboard_${cadena}`;
+                const sucursal = selections.gerente_sucursal !== 'Todos' ? selections.gerente_sucursal : '';
+                let filename = `Reporte_Ejecutivo_${cadena}`;
                 if(sucursal) filename += `_${sucursal}`;
                 filename += `.pdf`;
                 
